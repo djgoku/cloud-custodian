@@ -135,7 +135,7 @@ def init_config(policy_config):
 init_env_globals()
 
 
-def dispatch_event(event, context):
+def dispatch_event(event, context, config_file="config.json"):
     error = event.get('detail', {}).get('errorCode')
     if error and C7N_SKIP_EVTERR:
         log.debug("Skipping failed operation: %s" % error)
@@ -144,7 +144,7 @@ def dispatch_event(event, context):
     # one time initialization for cold starts.
     global policy_config, policy_data
     if policy_config is None:
-        with open('config.json') as f:
+        with open(config_file) as f:
             policy_data = json.load(f)
         policy_config = init_config(policy_data)
         load_resources(StructureParser().get_resource_types(policy_data))
